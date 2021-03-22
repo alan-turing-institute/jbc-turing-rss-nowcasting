@@ -1,4 +1,4 @@
-import multiprocess as mp
+# import multiprocess as mp
 
 import argparse
 import pickle
@@ -26,11 +26,6 @@ n_samples = 250
 
 prior_kappa_scale = 0.01
 
-# adj_dict = pickle.load(open('../../ltla-covid-cases/data/pickles/ltla_adjacency_dict.pickle', 'rb'))
-# all_ltlas = list(adj_dict.keys()) + ["Hackney and City of London"]
-# all_ltlas.remove("Hackney")
-# all_ltlas.remove("City of London")
-
 df = pd.read_csv(f"../data/cases-2020-12-14.csv")
 all_ltlas = df.query("`Area type` == 'ltla'")['Area name'].unique()
 
@@ -38,19 +33,18 @@ epsilon = 0.1
 
 
 def fit(sigma):
-    # for ltla in all_ltlas:
-    for ltla in ['Oldham']:
+    for ltla in all_ltlas:
 
         random.seed(SEED)
         np.random.seed(SEED)
         t.manual_seed(SEED)
 
-        out_dir = f'../../ltla-covid-cases/data/pickles/drift_model_refactored_scale_{sigma}/2020-12-13'
+        out_dir = f'../../ltla-covid-cases/data/pickles/drift_model_refactored_scale_{sigma}/2020-12-14'
         os.makedirs(out_dir, exist_ok=True)
 
         save_name = ltla.replace(" ", "_")
-        rd = pd.date_range(start="2020-11-19", end="2020-12-13")
-        sd = pd.date_range(start="2020-11-18", end="2020-12-12")
+        rd = pd.date_range(start="2020-11-20", end="2020-12-14")
+        sd = pd.date_range(start="2020-11-19", end="2020-12-13")
 
         if not os.path.exists(f"{out_dir}/{save_name}.pickle"):
             print(ltla)
@@ -61,9 +55,9 @@ def fit(sigma):
                 specimen_dates=sd,
             )
 
-            alphas, betas = moment_match_theta_priors(df[df['Specimen date']>='2020-11-25'], n_lags=18)
+            alphas, betas = moment_match_theta_priors(df[df['Specimen date']>='2020-11-26'], n_lags=18)
 
-            last_report = df[df['Report date']=='2020-12-13']
+            last_report = df[df['Report date']=='2020-12-14']
             x_0 = last_report['Daily lab-confirmed cases'].values[-25:-18].mean()
 
             prior_lam0_shape = 0.3 * x_0 ** 2. + (epsilon if x_0==0 else 0)

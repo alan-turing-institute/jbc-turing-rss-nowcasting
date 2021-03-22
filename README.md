@@ -31,7 +31,6 @@ cd jbcc-rss-turing-nowcasting
 2. Install dependencies
 
 ```{bash}
-<!-- pip install . -->
 pip install -r requirements.txt
 ```
 
@@ -43,4 +42,4 @@ jupyter lab notebooks/quick_start.ipynb
 
 ## Data
 
-The data consists of daily snapshots of COVID-19 positive test counts as reported on the [coronavirus dashboard](https://coronavirus.data.gov.uk). The snapshots are from October to December 2020 and stored as timestamped csv files. A full archive from which we obtained the files is maintained [here](https://github.com/theosanderson/covid_uk_data_timestamped).
+The data consists of daily snapshots of COVID-19 positive test counts as reported on the [coronavirus dashboard](https://coronavirus.data.gov.uk). The snapshots are from October to December 2020 and stored as timestamped csv files. The files comes from an archive maintained [here](https://github.com/theosanderson/covid_uk_data_timestamped).
