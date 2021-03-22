@@ -39,7 +39,7 @@ def fit(sigma):
         np.random.seed(SEED)
         t.manual_seed(SEED)
 
-        out_dir = f'../../ltla-covid-cases/data/pickles/drift_model_refactored_scale_{sigma}/2020-12-14'
+        out_dir = f'drift_model_scale_{sigma}/2020-12-14'
         os.makedirs(out_dir, exist_ok=True)
 
         save_name = ltla.replace(" ", "_")

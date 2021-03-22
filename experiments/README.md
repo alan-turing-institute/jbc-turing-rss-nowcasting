@@ -1,16 +1,18 @@
 # Experiments
 
-To create results in the report, we run the model for all Lower tier local authorities (LTLAs) using a range of values for the random walk scale in the model.
-
-To recreate results for all LTLAs using a model with a random walk scale of 4, run:
+We run the model on data as reported on the 14th of December. To recreate results for all LTLAs using a model with a given random walk scale run the below command (replace `<random_walk_scale>` with a value):
 
 ```{bash}
-python run.py -s 4
+python run.py -s <random_walk_scale>
 ```
 
-For the report we run the script with random walk scale values of 1 to 9. For each LTLA, we saved the model with the scale that had the highest model evidence. These are the models used to produce the final results. The optimised models (one per LTLA) are saved in the `results/` directory.
+We run the model with random walk scale values of 1 to 9. For each LTLA, we saved the model with the scale that had the highest model evidence in the `results/` directory:
 
-For code used to create plots in the report using the results:
+```{bash}
+python select_model.py
+```
+
+For code to create plots of the final optimised results in the report:
 
 ```{bash}
 jupyter lab reports_figs.ipynb
