@@ -24,7 +24,6 @@ thin = 20
 burn_in = 750
 n_samples = 250
 
-prior_kappa_scale = 0.01
 
 df = pd.read_csv(f"../data/cases-2020-12-14.csv")
 all_ltlas = df.query("`Area type` == 'ltla'")['Area name'].unique()
@@ -43,6 +42,9 @@ def fit(sigma):
         os.makedirs(out_dir, exist_ok=True)
 
         save_name = ltla.replace(" ", "_")
+
+        # get data to learn reporting priors from
+        # this is more data than will pass to the model
         rd = pd.date_range(start="2020-11-20", end="2020-12-14")
         sd = pd.date_range(start="2020-11-19", end="2020-12-13")
 
@@ -55,14 +57,21 @@ def fit(sigma):
                 specimen_dates=sd,
             )
 
+            # get reporting lag priors
+            # the moment_match...() function automatically ignores most recent
+            # 4 days of data as we don't know the final count yet
             alphas, betas = moment_match_theta_priors(df[df['Specimen date']>='2020-11-26'], n_lags=18)
 
             last_report = df[df['Report date']=='2020-12-14']
-            x_0 = last_report['Daily lab-confirmed cases'].values[-25:-18].mean()
 
+            # prior on the initial lambda
+            # set to have mean of the 7 day moving average
+            # using data up to observations passed to the model
+            x_0 = last_report['Daily lab-confirmed cases'].values[-25:-18].mean()
             prior_lam0_shape = 0.3 * x_0 ** 2. + (epsilon if x_0==0 else 0)
             prior_lam0_rate = 0.3 * x_0 + (epsilon if x_0==0 else 0)
 
+            # the data to fit model on
             ys = last_report["Daily lab-confirmed cases"].values[-18:]
 
             model = Nowcaster(
@@ -74,6 +83,9 @@ def fit(sigma):
                 sampler_length_scale=None,
             )
 
+            # fit model
+            # first do joint lambda & kappa filtering and smoothing
+            # then get the now-cast (x smoothing) and model evidence
             model.marginal_filtering_drift(ys, sd[-18:], thin, burn_in, n_samples)
             model.marginal_smoothing_drift()
             model.x_smoothing()
