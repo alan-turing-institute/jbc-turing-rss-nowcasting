@@ -4,7 +4,9 @@ The scripts in this directory were used to produce results and plots in the repo
 
 ## Data and priors
 
-We fit the model to data as reported on the 14th of December 2020 capturing the period when England was transitioning out of the second national lockdown. We learned priors on the reporting lag from the most recent two weeks of converged data where the final count is known (26th of November-9th of December 2020). We set the prior on the initial lambda to have the mean of the seven day moving average of positive test counts at the date of the first observation passed to the model.
+We fit the model to data as reported on the 14th of December 2020 capturing the period when England was transitioning out of the second national lockdown. Each model was trained on test counts reported for 26th November - 13th of December 2020 Specimen dates (inclusive).
+
+We learned priors on the reporting lag from the most recent two weeks of converged data where the final count is known (26th of November - 9th of December 2020). We set the prior on the initial lambda to have the mean of the seven day moving average of positive test counts at the date of the first observation passed to the model.
 
 ## Results
 
