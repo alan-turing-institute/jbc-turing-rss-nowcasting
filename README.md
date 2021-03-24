@@ -1,5 +1,5 @@
 
-# JBC-RSS-Turing Nowcasting
+# JBC-Turing-RSS Nowcasting
 
 A Bayesian model for time-series count data with weekend effects and a lagged reporting process.  
 

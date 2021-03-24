@@ -41,10 +41,9 @@ data_path = f"{root_dir}/data"
 def get_data(area_name, area_type="ltla", path=data_path, report_dates=None,  specimen_dates=None):
     """
     Returns data for `area_name` and `area_type` as recorded in reports published on
-    `report_dates` for test dates specified in `specimen_dates`
-    # (we expect to find data in timestamped datafiles in `<path>/<file_prefix><timestamp>.csv`).
+    `report_dates` for test dates specified in `specimen_dates`.
 
-    NOTES on data processing steps:
+    NOTES on data processing steps (based on data from July):
         - Not all SDs are reported in each report file
             --> carry values forward from last report
         - Sometimes, LTLA never gives a report for a given SD
@@ -55,8 +54,8 @@ def get_data(area_name, area_type="ltla", path=data_path, report_dates=None,  sp
     :param area_name: str, the area name
     :param area_type: str, the area type (ltla, utla, nation)
     :param path: str, path to directory with data files
-    :param report_dates: pandas.DatetimeIndex, the dates for which to load reports
-    :param sd_dates: pandas.DatetimeIndex, the test dates for which to get reports
+    :param report_dates: pandas.DatetimeIndex, timestamps of csvs from which to load data
+    :param sd_dates: pandas.DatetimeIndex, the test dates for which to return data
 
     :returns: Pandas dataframe
     """
@@ -177,14 +176,14 @@ def create_profiles(df):
 
 def get_beta_params(mu, var):
     """
-    Return parameters of the Beta distribution from mean and variance.
+    Return shape parameters of the Beta distribution from mean and variance.
     Includes sensibility checks:
         - if both mean and variance are 0, return a flat prior [1,1]
         - don't return params with values <= 0
 
     :param mu : float, mean of the distribution
     :param var : float, variance of the distribution
-    :returns: list of floats, the [alpha, beta] parameters of the Beta distribution
+    :returns: list of floats, the [alpha, beta] shepa parameters
     """
     if mu==0 and var==0:
         return [1., 1.]
@@ -207,13 +206,14 @@ def get_beta_params(mu, var):
 
 def moment_match_theta_priors(df, n_drop=4, lag_col='lag', prop_col='prop_reported', weighted=False, n_lags=None):
     """
-    Get priors for theta given data in df using moment matching (for each lag in df or up to max_lag).
+    Get priors for theta given data in df using moment matching (for each lag in df or up to n_lags).
 
     :param df: Pandas dataframe with columns `lag_col` and `prop_col` (returned by `get_data()`)
-    :param n_drop: int, number of recent days to drop (where expect true count not reported yet)
-    :param weighted: bool, indicates whether to use linear weights in moment matching
-    :param n_lags: optional int, indicates how many lags to return params for
+    :param n_drop: int, number of recent days to drop (where expect true count was not reported yet)
+    :param weighted: bool, whether to use linear weights in moment matching
+    :param n_lags: optional int, how many lags to return shape parameters for
     :returns: tuple (list, list), alpha and beta parameters of the Beta prior on theta
+        Note on indexing: lag 1 priors are last
     """
     if n_drop > 0:
         dates = df[sd].sort_values().unique()[:-n_drop]
@@ -254,4 +254,5 @@ def moment_match_theta_priors(df, n_drop=4, lag_col='lag', prop_col='prop_report
     alphas = [param[0] for param in params] + [params[-1][0]] * fill
     betas = [param[1] for param in params] + [params[-1][1]] * fill
 
+    # reverse order so that lag 1 params are last
     return alphas[::-1], betas[::-1]

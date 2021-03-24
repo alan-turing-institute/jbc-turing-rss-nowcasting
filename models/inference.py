@@ -55,7 +55,7 @@ class Nowcaster:
         on the under reporting proportion (Beta distribution).
         Lag 1 parameter is last i.e. (prior_theta_shape_b[-1]).
         List must have same length as there are observations.
-    random_walk_scale: Float, the scale of the AR1 prior
+    random_walk_scale: Float, the scale of the temporal smoothing prior
     prior_lam0_shape: optional Float, the shape parameter of the prior on the
         initial lambda (Gamma distribution)
     prior_lam0_rate: optional Float, the rate parameter of the prior on the
@@ -182,7 +182,8 @@ class Nowcaster:
 
     def set_weekend_correction_prior(self):
         """
-        Prior for weekend correction (what proportion of usual/weekday count expect to observe on weekends. Have the same prior for each weekend day.
+        Prior for weekend correction (what proportion of usual/weekday count expect
+        to observe on weekends. Have the same prior for each weekend day.
         """
         self._grid_weekend = t.arange(0.01, 1, 0.01)
         self._weekend_prior_correction = DiscreteDistribution(
@@ -229,7 +230,7 @@ class Nowcaster:
         self, observations, dates=None, thin=100, burn_in=100, n_samples=500
     ):
         """
-        Lambda and kappa filtering distributions.
+        Lambda and kappa filtering distributions for model with additive drift.
 
         Parameters
         ----------
@@ -313,7 +314,7 @@ class Nowcaster:
         self, observations, dates, thin=100, burn_in=100, n_samples=500
     ):
         """
-        Lambda filtering distribution for original model without additive drift.
+        Lambda filtering distribution for model without additive drift (no kappa).
 
         Parameters
         ----------
@@ -393,7 +394,7 @@ class Nowcaster:
 
     def marginal_smoothing(self):
         """
-        Lambda smoothing distribution (for original model without additive drift).
+        Lambda smoothing distribution for model without additive drift (no kappa).
         """
         assert (
             self.lambda_filtering_samples is not None
@@ -426,7 +427,7 @@ class Nowcaster:
 
     def marginal_smoothing_drift(self):
         """
-        Lambda and kappa smoothing distributions.
+        Lambda and kappa smoothing distributions for model with additive drift.
         """
         lambda_filtering_particles = self._lambda_filtering_samples
         kappa_filtering_particles = self._drift_filtering_samples
@@ -536,7 +537,7 @@ class Nowcaster:
 
     def compute_evidence(self):
         """
-        Log evidence for original model without additive drift.
+        Log evidence for model without additive drift.
         """
         assert (
             self.lambda_filtering_samples is not None
@@ -591,7 +592,7 @@ class Nowcaster:
 
     def compute_evidence_drift(self):
         """
-        Log evidence for model.
+        Log evidence for model with additive drift.
         """
         assert (
             self.lambda_filtering_samples is not None
@@ -655,19 +656,17 @@ class Nowcaster:
         n_samples=250,
     ):
         """
-        Fit model to data:
-            - compute filtering and smoothing for lambda and kappa
-            - get smoothing distributions for Xs (the now-cast)
-            - get model evidence
-
-        Note: original version of the model did not include an additive drift term.
-        Setting `drift=False` runs this original version of the model (in which case the random walk is directly on the lambda).
+        Fit model to data.
 
         Parameters
         ----------
         observations: List of integers, the observed counts (most recent are last)
-        dates: List of dates (can be strings), same length and order as observations
-        drift: Boolean, whether to include additive drift term in model (default)
+        dates: List of dates (can be strings), same length and order as observations.
+            If no dates are given, the model does not correct for weekend effects.
+        drift: Boolean, whether to include additive drift term in model (default).
+            The first version of the model did not include an additive drift term.
+            Setting `drift=False` runs this original version of the model
+            (in which case the random walk is directly on the lambda).
         evidence: Boolean, indicates whether to compute model evidence
         xs: Boolean, indicates whether to compute the x smoothing distribution
         thin: Integer, MCMC parameter (marginal filtering for lambda and kappa)
