@@ -3,8 +3,6 @@ This model is the same as in Jersakova et al. (2021) except a hyperprior is
 introduced for the random walk length and inference is done using NUTS instead 
 of SMC.
 
-Weekend effects not yet included.
-
 The original model includes the discrete latent variables X, which 
 represent the number of tests from a particular day that will return positive.
 In order to use HMC, these are marginalised out. They'll still be returned after 
