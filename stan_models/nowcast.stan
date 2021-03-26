@@ -66,7 +66,7 @@ generated quantities {
   int x[n_days];
 
   for (t in 1:n_days) {
-    x[t] = poisson_rng(theta[t] * lambda[t]);
+    x[t] = poisson_rng(lambda[t]);
   }
 
 }
