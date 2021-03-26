@@ -64,9 +64,5 @@ model {
 generated quantities {
   // produce samples of the latent true number of positive tests
   int x[n_days];
-
-  for (t in 1:n_days) {
-    x[t] = poisson_rng(lambda[t]);
-  }
-
+  for (t in 1:n_days) x[t] = poisson_rng(lambda[t]);
 }
