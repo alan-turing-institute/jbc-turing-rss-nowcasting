@@ -5,7 +5,7 @@ A Bayesian model for time-series count data with weekend effects and a lagged re
 
 ## Overview
 
-The model was developed within the [JBC-Turing-RSS lab](https://www.turing.ac.uk/research/research-projects/new-partnership-between-alan-turing-institute-and-royal-statistical) to now-cast COVID-19 positive test counts. In the UK, Pillar 2 PCR positive tests usually take about 4 to 5 days to process. Over this period, partial results are reported daily until the final count is reached. We make use of stability in the under reporting behaviour to infer the final count given the partial information as it arrives.
+The model was developed within the [JBC-Turing-RSS lab](https://www.turing.ac.uk/research/research-projects/providing-independent-research-leadership-joint-biosecurity-centre) to now-cast COVID-19 positive test counts. In the UK, Pillar 2 PCR positive tests usually take about 4 to 5 days to process. Over this period, partial results are reported daily until the final count is reached. We make use of stability in the under reporting behaviour to infer the final count given the partial information as it arrives.
 
 For more information on the model and inference read the [pre-print](https://arxiv.org/abs/2103.12661).
 
