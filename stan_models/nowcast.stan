@@ -2,11 +2,6 @@
 This model is the same as in Jersakova et al. (2021) except a hyperprior is 
 introduced for the random walk length and inference is done using NUTS instead 
 of SMC.
-
-The original model includes the discrete latent variables X, which 
-represent the number of tests from a particular day that will return positive.
-In order to use HMC, these are marginalised out. They'll still be returned after 
-running stan, as they are produced in the generated quantities block.
 */
 data {
   // measured positive tests over a sequence of days
@@ -76,9 +71,4 @@ model {
 
   // likelihood with latent true number of positive tests marginalised out 
   y ~ poisson(theta .* lambda .* z);
-}
-generated quantities {
-  // produce samples of the latent true number of positive tests
-  int x[n_days];
-  for (t in 1:n_days) x[t] = poisson_rng(lambda[t] * z[t]);
 }
