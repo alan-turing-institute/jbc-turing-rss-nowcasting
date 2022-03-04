@@ -8,7 +8,7 @@ We fit the model to data as reported on the 14th of December 2020 capturing the 
 
 We learned priors on the reporting lag from the most recent two weeks of converged data where the final count is known (26th of November - 9th of December 2020). We set the prior on the initial lambda to have the mean of the seven day moving average of positive test counts at the date of the first observation passed to the model.
 
-## Results
+## Main Results
 
 The only free parameter in the model is the scale of the temporal smoothing applied by the random walk prior. To fit the model to all Lower Tier Local Authorities (LTLAs) using a given random walk scale:
 
@@ -31,3 +31,8 @@ For code to create plots of the results:
 ```{bash}
 jupyter lab report_figs.ipynb
 ```
+
+## NobBS comparison
+
+The `run_nobbs.ipynb` notebook contains code to run the NOBBS model on the data and save the results.
+The 

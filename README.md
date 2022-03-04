@@ -34,6 +34,14 @@ pip install -r requirements.txt
 jupyter lab notebooks/quick_start.ipynb
 ```
 
+## Stan implementation
+
+To see an example implementation of the model in Stan with a hyperprior on the random walk scale:
+
+```{bash}
+jupyter lab notebooks/stan_version.ipynb
+```
+
 ## Results
 
-For code to reproduce results and plots in the report see the [experiments/](experiments/) directory.
+For code to reproduce results and plots in the paper see the [experiments/](experiments/) directory.
