@@ -34,5 +34,5 @@ jupyter lab report_figs.ipynb
 
 ## NobBS comparison
 
-The `run_nobbs.ipynb` notebook contains code to run the NOBBS model on the data and save the results.
-The 
+The `run_nobbs.ipynb` notebook contains code to run the NobBS model on the data and saves the results.
+The `eval_nobbs.ipynb` notebook evaluates NobBS now-cast performance.
